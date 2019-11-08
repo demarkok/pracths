@@ -44,3 +44,9 @@ hprop_plus = property $ do
   m <- forAll nat
   n <- forAll nat
   Nat.toNum m + Nat.toNum n === (Nat.toNum (m `Nat.plus` n) :: Integer)
+
+hprop_minus :: Property
+hprop_minus = property $ do
+  m <- forAll nat
+  n <- forAll nat
+  (max 0 (Nat.toNum m - Nat.toNum n)) === (Nat.toNum (m `Nat.minus` n) :: Integer)

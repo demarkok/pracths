@@ -10,8 +10,13 @@ data Nat where
 
 plus :: Nat -> Nat -> Nat
 plus Zero n = n
-plus (Succ m) n = Succ (m `plus` n)
+plus (Succ m) n = plus m (Succ n)
 
+minus :: Nat -> Nat -> Nat
+minus Zero _ = Zero
+minus r Zero = r
+minus (Succ m) (Succ n) = minus m n
+ 
 toNum :: Num n => Nat -> n
 toNum = go 0
   where
