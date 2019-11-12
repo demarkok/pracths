@@ -5,6 +5,7 @@ import GHC.TypeLits (TypeError, ErrorMessage (..))
 
 import Nat
 
+data Foo a = Fo a a a
 
 data Vec (n :: Nat) (a :: Type) where
   VNil :: Vec 'Zero a
@@ -20,6 +21,11 @@ type family Plus (m :: Nat) (n :: Nat) :: Nat where
   Plus 'Zero n = n
   Plus ('Succ m) n = 'Succ (Plus m n)
 --  Plus ('Succ m) n = Plus m ('Succ n)
+
+type family Minus (m :: Nat) (n :: Nat) :: Nat where
+  Minus 'Zero _ = 'Zero
+  Minus r 'Zero = r
+  Minus ('Succ m) ('Succ n) = Minus m n
 
 vappend :: Vec m a -> Vec n a -> Vec (Plus m n) a
 vappend VNil ys = ys
