@@ -5,11 +5,11 @@ extra-source-files:
   - README.md
 
 default-extensions:
-#  - AllowAmbiguousTypes
+  - AllowAmbiguousTypes
 #  - ApplicativeDo
 #  - BangPatterns
 #  - ConstraintKinds
-#  - DataKinds
+  - DataKinds
 #  - DeriveGeneric
 #  - DerivingStrategies
 #  - DerivingVia
@@ -17,7 +17,7 @@ default-extensions:
   - FlexibleInstances
   - GADTs
 #  - GeneralizedNewtypeDeriving
-#  - KindSignatures
+  - KindSignatures
 #  - LambdaCase
   - MultiParamTypeClasses
 #  - NamedFieldPuns
@@ -25,14 +25,14 @@ default-extensions:
 #  - PolyKinds
 #  - QuantifiedConstraints
 #  - RankNTypes
-#  - ScopedTypeVariables
+  - ScopedTypeVariables
 #  - StandaloneDeriving
 #  - TemplateHaskell
 #  - TupleSections
-#  - TypeApplications
-#  - TypeFamilies
-#  - TypeOperators
-#  - UndecidableInstances
+  - TypeApplications
+  - TypeFamilies
+  - TypeOperators
+  - UndecidableInstances
 #  - UndecidableSuperClasses
 
 ghc-options:
