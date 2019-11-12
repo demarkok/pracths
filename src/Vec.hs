@@ -13,6 +13,8 @@ data Vec (n :: Nat) (a :: Type) where
 vhead :: Vec ('Succ n) a -> a
 vhead (VCons x _) = x
 
+vtail :: Vec ('Succ n) a -> Vec n a
+vtail (VCons _ v) = v
 
 type family Plus (m :: Nat) (n :: Nat) :: Nat where
   Plus 'Zero n = n
