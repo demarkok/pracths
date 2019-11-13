@@ -2,6 +2,7 @@ module Vec where
 
 import Data.Kind (Constraint, Type)
 import GHC.TypeLits (TypeError, ErrorMessage (..))
+import Text.Read (readMaybe)
 
 import Nat
 
@@ -67,3 +68,10 @@ instance Vtake 'Zero m where
 
 instance Vtake n m => Vtake ('Succ n) ('Succ m) where
   vtake (VCons x xs) = VCons x (vtake xs)
+
+class Reshow (t :: Type) where
+  reshowAs :: String -> Maybe String
+
+instance (Read t, Show t) => Reshow t where
+  reshowAs s = show <$> ((readMaybe s) :: Maybe t)
+
