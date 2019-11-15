@@ -31,15 +31,15 @@ instance (KnownNat n, Show a) => Show (Vect n a) where
       go (VCons x xs) = show x <> "," <> go xs
 
 
-type family Leq (n :: Nat) (m :: Nat) :: Constraint where
-  Leq n m = ()
-  Leq n m = (CmpNat n m) ~ 'LT
+-- type family Leq (n :: Nat) (m :: Nat) :: Constraint where
+--   Leq n m = ()
+--   Leq n m = (CmpNat n m) ~ 'LT
 
-class Vtake (n :: Nat) (m :: Nat) where
-  vtake :: Leq n m => Vect m a -> Vect n a
+-- class Vtake (n :: Nat) (m :: Nat) where
+--   vtake :: Leq n m => Vect m a -> Vect n a
 
-instance Vtake 0 m where
-  vtake _ = VNil
+-- instance Vtake 0 m where
+--   vtake _ = VNil
 
-instance Vtake n m => Vtake (n + 1) (m + 1) where
-  vtake (VCons x xs) = VCons x (vtake xs)
+-- instance Vtake n m => Vtake (n + 1) (m + 1) where
+--   vtake (VCons x xs) = VCons x (vtake xs)

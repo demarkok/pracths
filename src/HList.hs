@@ -39,3 +39,17 @@ showZeroAs = show (0 :: t)
 
 hhead :: HList (a ': as) -> a
 hhead (HCons x _) = x
+
+
+type family ReverseGo (acc :: [k]) (as :: [k]) :: [k] where
+  ReverseGo acc '[] = acc
+  ReverseGo acc (t ': ts) = ReverseGo (t ': acc) ts
+
+type family Reverse (as :: [k]) :: [k] where
+  Reverse ts = ReverseGo '[] ts
+
+hreverse :: HList a -> HList (Reverse a)
+hreverse = go HNil where
+  go :: HList xs -> HList ys -> HList (ReverseGo xs ys)
+  go xs HNil = xs
+  go xs (HCons y ys) = go (HCons y xs) ys
