@@ -16,7 +16,7 @@ minus :: Nat -> Nat -> Nat
 minus Zero _ = Zero
 minus r Zero = r
 minus (Succ m) (Succ n) = minus m n
- 
+
 toNum :: Num n => Nat -> n
 toNum = go 0
   where

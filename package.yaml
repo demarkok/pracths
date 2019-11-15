@@ -50,6 +50,7 @@ ghc-options:
 
 dependencies:
   - base >= 4.7
+  - ghc-typelits-natnormalise
 
 library:
   source-dirs: src
