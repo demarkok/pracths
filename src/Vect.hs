@@ -2,7 +2,7 @@
 
 module Vect where
 
-import Data.Kind (Constraint, Type)
+import Data.Kind (Type)
 import GHC.TypeLits
 import Data.Proxy
 
@@ -11,6 +11,8 @@ data Foo a = Fo a a a
 data Vect (n :: Nat) (a :: Type) where
   VNil :: Vect 0 a
   VCons :: a -> Vect m a -> Vect (m + 1) a
+
+deriving instance Eq a => Eq (Vect n a)
 
 vhead :: Vect (n + 1) a -> a
 vhead (VCons x _) = x
@@ -30,16 +32,15 @@ instance (KnownNat n, Show a) => Show (Vect n a) where
       go (VCons x VNil) = show x <> "]"
       go (VCons x xs) = show x <> "," <> go xs
 
+class Vtake (n :: Nat) (m :: Nat) where
+  vtake :: n <= m => Vect m a -> Vect n a
 
--- type family Leq (n :: Nat) (m :: Nat) :: Constraint where
---   Leq n m = ()
---   Leq n m = (CmpNat n m) ~ 'LT
+instance Vtake 0 m where
+  vtake _ = VNil
 
--- class Vtake (n :: Nat) (m :: Nat) where
---   vtake :: Leq n m => Vect m a -> Vect n a
+unvcons :: (1 <= n) => Vect n a -> (a, Vect (n - 1) a)
+unvcons (VCons x xs) = (x, xs)
 
--- instance Vtake 0 m where
---   vtake _ = VNil
-
--- instance Vtake n m => Vtake (n + 1) (m + 1) where
---   vtake (VCons x xs) = VCons x (vtake xs)
+instance (1 <= n, (n - 1) <= (m - 1), Vtake (n - 1) (m - 1)) => Vtake n m where
+  vtake v = let (x, xs) = unvcons v in
+    VCons x (vtake @(n - 1) xs)
