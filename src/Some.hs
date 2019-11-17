@@ -2,7 +2,6 @@ module Some where
 
 import Type.Reflection ((:~~:) (HRefl), Typeable, eqTypeRep, typeOf, typeRep)
 
-
 data Some' = forall a. MkSome' a
 
 data Some c where
@@ -41,3 +40,25 @@ fromVariant (MkVariant x) =
 data (:~~:) (a :: Type) (b :: Type) where
   HRefl :: c :~~: c
 -}
+
+
+type Keyable t = (Eq t, Typeable t)
+
+data Entry where
+  MkEntry :: Keyable a => a -> a -> Entry
+
+type PolyMap = [Entry]
+
+empty :: PolyMap
+empty = []
+
+insert :: Keyable a => a -> a -> PolyMap -> PolyMap
+insert key value m = (MkEntry key value) : m
+
+lookup :: Keyable a => a -> PolyMap -> Maybe a
+lookup _ [] = Nothing
+lookup key ((MkEntry key' v) : m) =
+  let nxt = Some.lookup key m in
+    case typeOf key `eqTypeRep` typeOf key' of
+      Just HRefl -> if key == key' then Just v else nxt
+      Nothing -> nxt
