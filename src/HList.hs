@@ -10,7 +10,7 @@ data HList (as :: [Type]) where
   HNil :: HList '[]
   HCons :: a -> HList as -> HList (a ': as)
 
-foo :: HList '[Int, String, Bool]
+foo :: HList [Int, String, Bool]
 foo = HCons 10 $ HCons "hello" $ HCons True $ HNil
 
 hlength :: Num n => HList as -> n
@@ -30,8 +30,8 @@ instance All Show xs => Show (HList xs) where
     where
       go :: All Show ys => HList ys -> String
       go HNil = "]"
-      go (HCons y HNil) = show y<>"]"
-      go (HCons y ys) = show y<>","<>go ys
+      go (HCons y HNil) = show y <> "]"
+      go (HCons y ys) = show y <> "," <> go ys
 
 
 type ShowAndNum t = (Show t, Num t)
@@ -42,6 +42,9 @@ showZeroAs = show (0 :: t)
 
 hhead :: HList (a ': as) -> a
 hhead (HCons x _) = x
+
+htail :: HList (a ': as) -> HList as
+htail (HCons _ xs) = xs
 
 
 type family ReverseGo (acc :: [k]) (as :: [k]) :: [k] where
