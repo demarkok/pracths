@@ -75,3 +75,9 @@ class Reshow (t :: Type) where
 instance (Read t, Show t) => Reshow t where
   reshowAs s = show <$> ((readMaybe s) :: Maybe t)
 
+-- I use reverse to make it tail-recursive
+vec2list :: Vec n a -> [a]
+vec2list = reverse . go [] where
+  go :: [a] -> Vec n a -> [a]
+  go acc VNil = acc
+  go acc (VCons x xs) = go (x : acc) xs
