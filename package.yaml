@@ -57,6 +57,18 @@ library:
   source-dirs: src
   dependencies: []
 
+executables:
+  dsl:
+    main: Main.hs
+    source-dirs: apps/dsl
+    dependencies:
+      - pracths
+
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+
 tests:
   pracths-test:
     main: Test.hs
@@ -74,4 +86,3 @@ tests:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
-
