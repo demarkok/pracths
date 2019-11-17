@@ -90,6 +90,17 @@ instance HList2Vec' n => HList2Vec' ('Succ n) where
 hlist2list :: All ((~) a) as => HList as -> [a]
 hlist2list = vec2list . hlist2vec
 
+class List2HList (n :: Nat) where
+  list2hlist :: [a] -> Maybe (HList (Replicate n a))
+
+instance List2HList 'Zero where
+  list2hlist _ = Just HNil
+
+instance List2HList n => List2HList ('Succ n) where
+  list2hlist (x : xs) = HCons x <$> list2hlist @n xs
+  list2hlist _ = Nothing
+
+
 type family Map (f :: Type) (as :: [k1]) :: [k2] where
   Map _ '[] = '[]
   Map f (a ': as) = MapType f a ': Map f as

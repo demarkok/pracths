@@ -81,3 +81,14 @@ vec2list = reverse . go [] where
   go :: [a] -> Vec n a -> [a]
   go acc VNil = acc
   go acc (VCons x xs) = go (x : acc) xs
+
+
+class List2Vec (n :: Nat) where
+  list2vec :: [a] -> Maybe (Vec n a)
+
+instance List2Vec 'Zero where
+  list2vec _ = Just VNil
+
+instance List2Vec n => List2Vec ('Succ n) where
+  list2vec (x : xs) = VCons x <$> (list2vec xs)
+  list2vec _ = Nothing

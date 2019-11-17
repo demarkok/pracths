@@ -34,3 +34,11 @@ hprop_vec2list = property $ do
   let v = VCons a $ VCons b $ VCons c $ VCons d $ VNil
   let l = [a, b, c, d]
   l === vec2list v
+
+
+hprop_list2vec2list :: Property
+hprop_list2vec2list = property $ do
+  let genint = G.int R.linearBounded
+  (a, b, c, d) <- forAll $ (,,,) <$> genint <*> genint <*> genint <*> genint
+  let l = [a, b, c, d]
+  Just l === (vec2list <$> list2vec @Four l)
