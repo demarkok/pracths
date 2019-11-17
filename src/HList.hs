@@ -106,11 +106,12 @@ type family Map (f :: Type) (as :: [k1]) :: [k2] where
   Map f (a ': as) = MapType f a ': Map f as
 
 
-data Shower
 
 class MapFunction (f :: Type) (a :: Type) where
   type MapType f a :: Type
   mapVal :: a -> MapType f a
+
+data Shower
 
 instance MapFunction Shower Int where
   type MapType Shower Int = String
@@ -134,3 +135,20 @@ instance HMap f '[] where
 
 instance (MapFunction f a, HMap f as) => HMap f (a ': as) where
   hmap (HCons x xs) = HCons (mapVal @f x) (hmap @f xs)
+
+
+class Monoid m => MapFunctionToMonoid (f :: Type) (a :: Type) (m :: Type) where
+  mapValToMonoid :: a -> m
+
+class Monoid m => HFoldMap (f :: Type) (as :: [Type]) (m :: Type) where
+  hfoldMap :: HList as -> m
+
+instance Monoid m => HFoldMap f '[] m where
+  hfoldMap _ = mempty
+
+instance (Monoid m, MapFunctionToMonoid f a m, HFoldMap f as m) => HFoldMap f (a ': as) m where
+  hfoldMap (HCons x xs) = (mapValToMonoid @f x) <> hfoldMap @f xs
+
+-- instance MapFunctionToMonoid f a m => MapFunction f a where
+--   type MapType f a = m
+--   mapVal = mapValToMonoid
