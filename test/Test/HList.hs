@@ -25,3 +25,13 @@ hprop_hmap = property $ do
   let hl = HCons a $ HCons b $ HCons c $ HNil
   let yesNo x = if x then "Y" else "N"
   "[\""<>show a<>"\",\""<>b<>"\",'"<>yesNo c<>"']" === show (hmap @Shower hl)
+
+
+hprop_hfoldMap :: Property
+hprop_hfoldMap = property $ do
+  a <- forAll $ G.int R.linearBounded
+  b <- forAll $ G.string (R.linear 0 100) G.alphaNum
+  c <- forAll $ G.bool
+
+  let hl = HCons a $ HCons b $ HCons c $ HNil
+  show a <> show b <> show c === hfoldMap @Shower hl

@@ -137,18 +137,25 @@ instance (MapFunction f a, HMap f as) => HMap f (a ': as) where
   hmap (HCons x xs) = HCons (mapVal @f x) (hmap @f xs)
 
 
-class Monoid m => MapFunctionToMonoid (f :: Type) (a :: Type) (m :: Type) where
-  mapValToMonoid :: a -> m
+class AssocType (f :: Type) where
+  type FType f :: Type
+type ToMonoid f = (AssocType f, Monoid (FType f))
 
-class Monoid m => HFoldMap (f :: Type) (as :: [Type]) (m :: Type) where
-  hfoldMap :: HList as -> m
+class ToMonoid f => MapFunctionToMonoid f a where
+  mapValToMonoid :: a -> FType f
 
-instance Monoid m => HFoldMap f '[] m where
-  hfoldMap _ = mempty
+class AssocType f => HFoldMap (f :: Type) (as :: [Type]) where
+  hfoldMap :: HList as -> FType f
 
-instance (Monoid m, MapFunctionToMonoid f a m, HFoldMap f as m) => HFoldMap f (a ': as) m where
-  hfoldMap (HCons x xs) = (mapValToMonoid @f x) <> hfoldMap @f xs
+instance ToMonoid f => HFoldMap f '[] where
+  hfoldMap HNil = mempty
 
--- instance MapFunctionToMonoid f a m => MapFunction f a where
---   type MapType f a = m
---   mapVal = mapValToMonoid
+instance (MapFunctionToMonoid f a, HFoldMap f as) => HFoldMap f (a ': as) where
+  hfoldMap (HCons x xs) = mapValToMonoid @f x <> hfoldMap @f @as xs
+
+
+instance AssocType Shower where
+  type FType Shower = String
+
+instance Show a => MapFunctionToMonoid Shower a where
+  mapValToMonoid = show
