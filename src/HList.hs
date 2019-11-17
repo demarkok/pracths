@@ -87,6 +87,9 @@ instance HList2Vec' n => HList2Vec' ('Succ n) where
   hlist2vec' (HCons x xs) = VCons x (hlist2vec' xs)
 
 
+hlist2list :: All ((~) a) as => HList as -> [a]
+hlist2list = vec2list . hlist2vec
+
 type family Map (f :: Type) (as :: [k1]) :: [k2] where
   Map _ '[] = '[]
   Map f (a ': as) = MapType f a ': Map f as
