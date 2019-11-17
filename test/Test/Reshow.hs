@@ -11,4 +11,4 @@ unit_doubleReshow =
 
 unit_doubleReshow' :: Assertion
 unit_doubleReshow' =
-  Just "4.0" @=? reshowAs' (Proxy :: Proxy Double) "4"
+  Just "4.0" @=? reshowAs' @Double Proxy "4"
