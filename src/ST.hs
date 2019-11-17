@@ -40,10 +40,15 @@ test = do
   modifySTRef r (+1)
   readSTRef r
 
-main :: IO ()
-main =
-  let x = runST test in print x
+-- main :: IO ()
+-- main =
+--   let x = runST test in print x
 
+magic :: STRef s a -> String
+magic x = x `seq` "VICTORY"
+
+main :: IO ()
+main = putStrLn $ runST $ (newSTRef 0) >>= (pure . magic)
 {-
 bad :: ST s (STRef s Int)
 bad = do
