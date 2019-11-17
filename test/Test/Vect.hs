@@ -1,6 +1,3 @@
-
-{-# OPTIONS_GHC -fplugin GHC.TypeLits.Normalise #-}
-
 module Test.Vect where
 
 import Hedgehog
@@ -23,3 +20,10 @@ hprop_vtake3of4 = property $ do
   (a, b, c, d) <- forAll $ (,,,) <$> genint <*> genint <*> genint <*> genint
   let v = VCons a $ VCons b $ VCons c $ VCons d $ VNil
   "Vect{3}[" <> show a <> "," <> show b <> "," <> show c <> "]" === show (vtake @3 v)
+
+hprop_vtake2of4 :: Property
+hprop_vtake2of4 = property $ do
+  let genint = G.int R.linearBounded
+  (a, b, c, d) <- forAll $ (,,,) <$> genint <*> genint <*> genint <*> genint
+  let v = VCons a $ VCons b $ VCons c $ VCons d $ VNil
+  (VCons a $ VCons b $ VNil) === vtake @2 v

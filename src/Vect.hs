@@ -12,13 +12,18 @@ data Vect (n :: Nat) (a :: Type) where
   VNil :: Vect 0 a
   VCons :: a -> Vect m a -> Vect (m + 1) a
 
+unvcons :: (1 <= n) => Vect n a -> (a, Vect (n - 1) a)
+unvcons (VCons x xs) = (x, xs)
+
 deriving instance Eq a => Eq (Vect n a)
 
 vhead :: Vect (n + 1) a -> a
-vhead (VCons x _) = x
+vhead v = x where
+  (x, _) = unvcons v
 
 vtail :: Vect (n + 1) a -> Vect n a
-vtail (VCons _ v) = v
+vtail v = xs where
+  (_, xs) = unvcons v
 
 vappend :: Vect m a -> Vect n a -> Vect (m + n) a
 vappend VNil ys = ys
@@ -38,9 +43,7 @@ class Vtake (n :: Nat) (m :: Nat) where
 instance Vtake 0 m where
   vtake _ = VNil
 
-unvcons :: (1 <= n) => Vect n a -> (a, Vect (n - 1) a)
-unvcons (VCons x xs) = (x, xs)
-
 instance (1 <= n, (n - 1) <= (m - 1), Vtake (n - 1) (m - 1)) => Vtake n m where
-  vtake v = let (x, xs) = unvcons v in
-    VCons x (vtake @(n - 1) xs)
+  vtake v = VCons x (vtake @(n - 1) @(m - 1) xs)
+    where
+      (x, xs) = unvcons v
